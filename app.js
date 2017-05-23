@@ -4,7 +4,7 @@
 /*******************************************************************************
  * Copyright (c) 2015 IBM Corp.
  *
- * All rights reserved. 
+ * All rights reserved.
  *
  * Contributors:
  *   David Huffman - Initial implementation
@@ -44,7 +44,7 @@ app.engine('.html', require('jade').__express);
 app.use(compression());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded()); 
+app.use(bodyParser.urlencoded());
 app.use(parseCookie);
 app.use('/cc/summary', serve_static(path.join(__dirname, 'cc_summaries')) );												//for chaincode investigator
 app.use( serve_static(path.join(__dirname, 'public'), {maxAge: '1d', setHeaders: setCustomCC}) );							//1 day cache
@@ -68,7 +68,7 @@ app.use(function(req, res, next){
 	req.bag = {};											//create my object for my stuff
 	req.session.count = eval(req.session.count) + 1;
 	req.bag.session = req.session;
-	
+
 	var url_parts = url.parse(req.url, true);
 	req.parameters = url_parts.query;
 	keys = Object.keys(req.parameters);
@@ -200,13 +200,13 @@ var options = 	{
 									quiet: true, 															//detailed debug messages on/off true/false
 									tls: true, 																//should app to peer communication use tls?
 									maxRetry: 1																//how many times should we retry register before giving up
-								}						
+								}
 					},
 					chaincode:{
-						zip_url: 'https://github.com/cherky75/nv-chaincode-local/archive/master.zip',
+						zip_url: 'https://github.com/jihun-cho/nv-chaincode-local/archive/master.zip',  // to edit
 						unzip_dir: 'nv-chaincode-local-master',									//subdirectroy name of chaincode after unzipped
-						git_url: 'https://github.com/cherky75/nv-chaincode-local',			//GO git http url
-					
+						git_url: 'https://github.com/jihun-cho/nv-chaincode-local',			//GO git http url    // to edit
+
 						//hashed cc name from prev deployment
 						//deployed_name: 'mycc'
 						//deployed_name: '4f1bf6581ebe31326cf8ae669859225f1ef65ec6b718142f1e30a4dc9c9dbd51c3ddcc2ff070542c8c3d38e82d81c7690da5db7a0fbc3383874787816e2a4017'
@@ -216,7 +216,7 @@ if(process.env.VCAP_SERVICES){
 	console.log('\n[!] looks like you are in bluemix, I am going to clear out the deploy_name so that it deploys new cc.\n[!] hope that is ok budddy\n');
 	options.chaincode.deployed_name = "";
 }
-ibc.load(options, cb_ready);		
+ibc.load(options, cb_ready);
 
 														//parse/load chaincode
 
@@ -264,12 +264,12 @@ function cb_deployed(e, d){
 				    		part2.process_msg(ws, data, sess.username);
 				    	}
 				    });
-			    }); 
+			    });
 			});
-			
+
 			ws.on('close', function(){});
 		});
-		
+
 		wss.broadcast = function broadcast(data) {											//send to all connections
 			wss.clients.forEach(function each(client) {
 				try{
@@ -281,7 +281,7 @@ function cb_deployed(e, d){
 				}
 			});
 		};
-		
+
 		// ========================================================
 		// Part 2 Code - Monitor the height of the blockchain
 		// =======================================================
@@ -292,13 +292,13 @@ function cb_deployed(e, d){
 				wss.broadcast({msg: 'reset'});
 				// chaincode.read('GetAllCPs', cb_got_papers);
 			}
-			
+
 			//got the block's stats, lets send the statistics
 			function cb_blockstats(e, stats){
 				if(chain_stats.height) stats.height = chain_stats.height - 1;
 				wss.broadcast({msg: 'chainstats', e: e, chainstats: chain_stats, blockstats: stats});
 			}
-			
+
 
 		});
 	}
